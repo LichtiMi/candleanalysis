@@ -46,13 +46,10 @@ class PatternAnalysis:
         lfLowDiff = min(adfRow.Open[0], adfRow.Close[0]) - adfRow.Low[0]
 
         # Die Länge der Candle ermitteln
-        # -------------------------------
-        lfBodyDiff = abs(adfRow.Open[0] - adfRow.Close[0])
-
-        # Sollte die Größe der Candle kleiner als ein Pip sein, dann auf 1 Pip setzen
-        # ----------------------------------------------------------------------------
-        if lfBodyDiff < 0.000001:
-            lfBodyDiff = 0.000001
+        # Sollte die Größe der Candle kleiner als
+        # ein Pip sein, dann auf 1 Pip setzen
+        # ---------------------------------------
+        lfBodyDiff = max(abs(adfRow.Open[0] - adfRow.Close[0]), 0.000001)
 
         # print(f"{lfBodyDiff}\t{lfBodyDiff}\t{lfBodyDiff}")
 
