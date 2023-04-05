@@ -10,11 +10,26 @@ import constant
 
 
 class PatternAnalysis:
-    """Klasse zur Analyse von Candlestickls"""
+    """Patternanalysis (object)
+
+    Klasse zur Analyse von Candlestickls"""
 
     @staticmethod
     def IsStar(adfRow: pd.DataFrame) -> int:
-        """Checks if the current candle is a star or hammer"""
+        """Prüft, ob die aktuelle Cancle ein Star oder Hammer ist.
+
+        Parameter
+        ---------
+        adfRow : pd.DataFrame
+           Dataframe mit einer Zeile, das die aktuelle Candle beinhaltet,
+           die überprüft werden soll.
+
+        Return
+        ------
+        int
+            SELL (1) wenn es sich um einen Hammer handelt
+            BUY(2)   wenn es sich um einn Star handelt
+            0        wenn keine besondere Candle vorliegt"""
 
         # Variablen definieren
         # ---------------------
@@ -83,3 +98,23 @@ class PatternAnalysis:
         # Andernfalls zurück geben, dass kein Star oder Hammer vorliegt
         # -------------------------------------------------------------
         return 0
+
+    @staticmethod
+    def IsEngulfing(adfRowset: pd.DataFrame) -> int:
+        """Überprüft, ob die letzten 4 Candles des übergebenen Roses
+        eine engulfing bullish oder bearisch Form hat.
+
+        Parameter
+        ---------
+        adfRow : pd.DataFrame
+           Dataframe, das zumindest vier Zeilen beinhalten muss,
+           die überprüft werden sollen.
+
+        Return
+        ------
+        int
+            SELL (1) wenn es sich um einen Hammer handelt
+            BUY(2)   wenn es sich um einn Star handelt
+            0        wenn keine besondere Candle vorliegt"""
+
+        return False
