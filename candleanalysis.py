@@ -5,6 +5,7 @@ for candle stick analysis."""
 
 # Import modules
 # --------------
+import math
 import pandas as pd
 import constant
 
@@ -100,21 +101,124 @@ class PatternAnalysis:
         return 0
 
     @staticmethod
-    def IsEngulfing(adfRowset: pd.DataFrame) -> int:
+    def IsThreeLine(adfRowset: pd.DataFrame) -> int:
         """Überprüft, ob die letzten 4 Candles des übergebenen Roses
-        eine engulfing bullish oder bearisch Form hat.
+        ein three line strike sind.
 
         Parameter
         ---------
         adfRow : pd.DataFrame
-           Dataframe, das zumindest vier Zeilen beinhalten muss,
+           Dataframe, das vier Zeilen beinhalten muss,
            die überprüft werden sollen.
 
         Return
         ------
         int
-            SELL (1) wenn es sich um einen Hammer handelt
-            BUY(2)   wenn es sich um einn Star handelt
-            0        wenn keine besondere Candle vorliegt"""
+            SELL (-1) wenn es sich um einen Hammer handelt
+            BUY (1)   wenn es sich um einn Star handelt
+            0         wenn keine besondere Candle vorliegt"""
 
-        return False
+        # Variablendefinition
+        # -------------------
+        i: int = 0  # Zählervariable
+        liMerkrichtung: int = 0  # Richtung, die die Candles einnehmen
+        liRichtung: int = 0  # Richtung, in die die aktuelle Candle zeigt
+        lfBody: float = 0.0  # Größe der Candle
+
+        # Überprüfen, ob 4 Candles übergeben wurden
+        # Wenn nicht, dann 0 zurück geben
+        # -----------------------------------------
+        if len(adfRowset) != 4:
+            return 0
+
+        # Die vier Candles überprüfen
+        # ---------------------------
+        for i in range(4):
+            # Richtung der aktuellen Candle ermitteln
+            # ---------------------------------------
+            liRichtung = PatternAnalysis.CandleDirection(adfRowset.iloc[i : i + 1])
+
+            # Wenn noch keine Richtung gemerkt wurde, dann jetzt
+            # die Richtung, in die überprüft werden soll ermitteln
+            # ----------------------------------------------------
+            if liMerkrichtung == 0:
+                liMerkrichtung = liRichtung
+
+                # Wenn die erste Candle eine Doji Candle ist,
+                # dann kann kein 3 Line Strike ermittelt werden
+                # ---------------------------------------------
+                if liMerkrichtung == 0:
+                    return 0
+
+            # Wenn die zweite oder dritte Candle eine andere Richtung haben
+            # als die ursprünglich gemerkte Candle, dann handelt es sich um keinen
+            # 3 Line Strike
+            # --------------------------------------------------------------------
+            if 0 < i < 3 and liRichtung != liMerkrichtung:
+                return 0
+
+            # Wenn die vierte Candle in die gleiche Richtung weist, dann
+            # handelt es sich auch nicht um einen 3 Line Strike
+            # ----------------------------------------------------------
+            if i == 3 and liRichtung == liMerkrichtung:
+                return 0
+
+            # Die Größe des Körpers der 3. Candle merken
+            # ------------------------------------------
+            if i == 2:
+                lfBody = abs(adfRowset.Close[i] - adfRowset.Open[i])
+
+            # Überprüfen, ob die letzte Candle kleiner ist als die
+            # vorletzte Candle. Wenn das so ist, dann ist es ebenfalls
+            # kein 3 Line Strike.
+            # --------------------------------------------------------
+            if i == 3 and abs(adfRowset.Close[i] - adfRowset.Open[i]) < lfBody:
+                return 0
+
+        # Wenn bisher nicht abgebrochen wurde, dann die Richtung
+        # der letzten Candle zurück geben
+        # ------------------------------------------------------
+        return liRichtung
+
+    @staticmethod
+    def CandleDirection(adfRow: pd.DataFrame) -> int:
+        """Überprüft, ob die Cancle aufsteigend oder absteigend ist
+        und gibt die Richtung entsprechend zurück.
+
+        Parameter
+        ---------
+        adfRow : pd.DataFrame
+            Dataframe mit einer Candle, die überprüft werden soll.
+
+        Return
+        ------
+        int
+            SELL (-1) bedeutet fallende Candle
+            BUY (1)   bedeutet steigende Candle
+            0         bedeutet, dass es sich um eine Doji Candle handelt"""
+
+        # Variablendefinition
+        # -------------------
+        lfBody: float = 0.0
+
+        # Überprüfen, ob eine Zeile übergeben wurde
+        # -----------------------------------------
+        if len(adfRow) == 0:
+            return 0
+
+        # Größe des Body ausrechnen
+        # -------------------------
+        lfBody = adfRow.Close[0] - adfRow.Open[0]
+
+        # Wenn es sich um eine Doji Candle handelt, 0 zurück geben
+        # --------------------------------------------------------
+        if lfBody == 0:
+            return 0
+
+        # Das Vorzeichen der Candle für 1 verwenden
+        # -----------------------------------------
+        lfBody = math.copysign(1.0, lfBody)
+
+        # Wert zurück geben
+        # -----------------
+        return int(lfBody)
