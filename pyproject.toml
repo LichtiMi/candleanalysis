@@ -1,11 +1,11 @@
 [project]
-name = "brokerapi"
+name = "cnadleanalysis"
 version = "2023.05.07"
-description = "Module for managing communication with different API Gateways of different brokers"
+description = "Module for analysing candlestics in trading"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {file = "LICENSE"}
-keywords = ["Broker", "API"]
+keywords = ["candlestics", "trading"]
 authors = [
   {email = "Michael Lichtenegger"},
   {name = "Michael Lichtenegger"}
