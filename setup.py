@@ -1,3 +1,6 @@
+"""
+Setupmodul für candleanalysis
+"""
 #!/usr/bin/env python
 
 from setuptools import setup
