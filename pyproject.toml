@@ -1,5 +1,5 @@
 [project]
-name = "cnadleanalysis"
+name = "candleanalysis"
 version = "0.1.8"
 description = "Module for analysing candlestics in trading"
 readme = "README.md"
