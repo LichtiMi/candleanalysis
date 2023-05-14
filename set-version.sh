@@ -37,7 +37,7 @@ bump2version --allow-dirty --new-version $new_version $part
 ##
 ## 
 #
-#cd ~/Scripts/imports/brokerapi
+#cd ~/Scripts/imports/candleanalysis
 #bump2version --no-commit --no-tag --allow-dirty build
 
 #<----------------- .git/hook/pre-commit script END ----------------->
