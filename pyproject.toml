@@ -1,6 +1,6 @@
 [project]
 name = "candleanalysis"
-version = "0.1.8"
+version = "0.1.8-134"
 description = "Module for analysing candlestics in trading"
 readme = "README.md"
 requires-python = ">=3.10"
